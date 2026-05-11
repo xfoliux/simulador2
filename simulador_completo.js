@@ -10,12 +10,13 @@ let creditoAprobado = false;
 
 function ocultarSecciones() {
   let componente = document.getElementById("parametros");
-  let listaClass = componente.classList;
-  listaClass.remove("activa");  // oculta
+  componente.classList.remove("activa");
 
   let componente2 = document.getElementById("clientes");
-  let listaClass2 = componente2.classList;
-  listaClass2.remove("activa");
+  componente2.classList.remove("activa");
+
+  let componente3 = document.getElementById("creditos");
+  componente3.classList.remove("activa");
 }
 
 
@@ -48,6 +49,11 @@ function guardarCliente() {
   // VALIDACIÓN
   if (cedula == "" || nombre == "" || apellido == "" || isNaN(ingresos) || isNaN(egresos)) {
     alert("Complete todos los campos correctamente");
+    return;
+  }
+    //evitar que las cedulas se dupliquen
+    if (buscarCliente(cedula) != null && clienteSeleccionado == null) {
+    alert("La cédula del cliente ya existe");
     return;
   }
 
@@ -128,8 +134,6 @@ function seleccionarCliente(cedula) {
   }
 }
 
-
-
 function limpiarFormulario() {
   mostrarTextoEnCaja("cedula", "");
   mostrarTextoEnCaja("nombre", "");
@@ -149,5 +153,77 @@ function buscarCliente(cedula){
   return null;
 }
 
+function buscarClienteCredito(){
+  let cedula = recuperaraTexto("buscarCedulaCredito");
+  let cliente = buscarCliente(cedula);
+  let div = document.getElementById("datosClienteCredito");
+
+    if(cedula == ""){
+      div.innerHTML = `<p style="color:red;">Ingrese una cédula</p>`;
+      return;
+    }
+
+      if (cliente != null) {
+        clienteSeleccionado = cliente;
+
+    div.innerHTML = `
+      <h3>Datos del Cliente</h3>
+      <p><strong>Cédula:</strong> ${cliente.cedula}</p>
+      <p><strong>Nombre:</strong> ${cliente.nombre}</p>
+      <p><strong>Apellido:</strong> ${cliente.apellido}</p>
+      <p><strong>Ingresos:</strong> ${cliente.ingresos}</p>
+      <p><strong>Egresos:</strong> ${cliente.egresos}</p>`;
+  } else {
+    div.innerHTML = `<p style="color:red;">Cliente no encontrado</p>`;
+  }
+}
+
+function calcularCredito() {
+  if (clienteSeleccionado == null) {
+    alert("Debe buscar un cliente");
+    return;
+  }
+
+  let monto = recuperarFloat("montoCredito");
+  let plazo = recuperarInt("plazoCredito");
+
+  if (isNaN(monto) || isNaN(plazo)) {
+    alert("Ingrese monto y plazo");
+    return;
+  }
+
+  let capacidadPago =
+    clienteSeleccionado.ingresos - clienteSeleccionado.egresos;
+  let interes = monto * (tasaInteres / 100);
+  let totalPagar = monto + interes;
+  let cuotaMensual = totalPagar / plazo;
+  let resultado = document.getElementById("resultadoCredito");
+
+  if (cuotaMensual <= capacidadPago * 0.4) {
+
+    resultado.innerHTML = `
+      Capacidad de pago: ${capacidadPago}<br>
+      Total a pagar: ${totalPagar}<br>
+      Cuota mensual: ${cuotaMensual.toFixed(2)}<br>
+      RESULTADO: APROBADO
+    `;
+
+    resultado.className = "aprobado";
+    creditoAprobado = true;
+
+  } else {
+
+    resultado.innerHTML = `
+      Capacidad de pago: ${capacidadPago}<br>
+      Total a pagar: ${totalPagar}<br>
+      Cuota mensual: ${cuotaMensual.toFixed(2)}<br>
+      RESULTADO: RECHAZADO
+    `;
+
+    resultado.className = "rechazado";
+    creditoAprobado = false;
+  }
+}
+mostrarSeccion("parametros");
 
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios

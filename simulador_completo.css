@@ -102,4 +102,26 @@
       border-radius: 5px;
       margin-top: 10px;
     }
-  
+section{
+    display: none;
+}
+
+.activa{
+    display: block;
+}
+
+.aprobado{
+    color: green;
+    font-weight: bold;
+}
+
+.rechazado{
+    color: red;
+    font-weight: bold;
+}
+
+table, th, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}

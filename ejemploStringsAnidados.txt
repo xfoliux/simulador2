@@ -1,2 +1,0 @@
-tabla.innerHTML += `<button onclick="seleccionar('`+cedula+`')">`;
-
