@@ -125,3 +125,6 @@ table, th, td{
     border-collapse: collapse;
     padding: 5px;
 }
+table{
+    margin-top: 10px;
+}

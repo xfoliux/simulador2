@@ -9,16 +9,19 @@ let plazoCalculado = 0;
 let creditoAprobado = false;
 
 function ocultarSecciones() {
-  let componente = document.getElementById("parametros");
-  componente.classList.remove("activa");
 
-  let componente2 = document.getElementById("clientes");
-  componente2.classList.remove("activa");
+  document.getElementById("parametros")
+    .classList.remove("activa");
 
-  let componente3 = document.getElementById("creditos");
-  componente3.classList.remove("activa");
+  document.getElementById("clientes")
+    .classList.remove("activa");
+
+  document.getElementById("creditos")
+    .classList.remove("activa");
+
+  document.getElementById("historial")
+    .classList.remove("activa");
 }
-
 
 function mostrarSeccion(id) {
   ocultarSecciones();
@@ -27,7 +30,6 @@ function mostrarSeccion(id) {
   let listaClass = componente.classList;
   listaClass.add("activa");  //activa
 }
-
 
 function guardarTasa(){
   let tasa = recuperarFloat("tasaInteres");
@@ -211,8 +213,12 @@ function calcularCredito() {
     resultado.className = "aprobado";
     creditoAprobado = true;
 
-  } else {
+    document.getElementById("btnAsignarCredito").disabled = false;
+    montoCalculado = monto;
+    plazoCalculado = plazo;
+    cuotaCalculada = cuotaMensual;
 
+  } else {
     resultado.innerHTML = `
       Capacidad de pago: ${capacidadPago}<br>
       Total a pagar: ${totalPagar}<br>
@@ -222,8 +228,74 @@ function calcularCredito() {
 
     resultado.className = "rechazado";
     creditoAprobado = false;
+
+    document.getElementById("btnAsignarCredito").disabled = true;
   }
 }
 mostrarSeccion("parametros");
+
+
+function buscarCreditos(cedula) {
+  let creditosCliente = [];
+
+  for (let i = 0; i < creditos.length; i++) {
+
+    if (creditos[i].cedula == cedula) {
+      creditosCliente.push(creditos[i]);
+    }
+  }
+  return creditosCliente;
+}
+
+function buscarCreditosCliente() {
+
+  let cedula = recuperaraTexto("buscarCedulaHistorial");
+  let resultado = buscarCreditos(cedula);
+
+  pintarCreditos(resultado);
+}
+
+function asignarCredito() {
+
+  if (creditoAprobado == false) {
+    alert("El crédito no está aprobado");
+    return;
+  }
+
+  let credito = {
+
+    cedula: clienteSeleccionado.cedula,
+    nombre: clienteSeleccionado.nombre,
+    apellido: clienteSeleccionado.apellido,
+    monto: montoCalculado,
+    tasa: tasaInteres,
+    plazo: plazoCalculado,
+    cuota: cuotaCalculada
+  };
+
+  creditos.push(credito);
+
+  alert("Crédito asignado correctamente");
+
+  pintarCreditos(creditos);
+}
+
+function pintarCreditos(listaCreditos) {
+  let contenido = "";
+
+  for (let i = 0; i < listaCreditos.length; i++) {
+
+    contenido += "<tr>";
+    contenido += "<td>" + listaCreditos[i].cedula + "</td>";
+    contenido += "<td>" + listaCreditos[i].nombre + "</td>";
+    contenido += "<td>" + listaCreditos[i].apellido + "</td>";
+    contenido += "<td>" + listaCreditos[i].monto + "</td>";
+    contenido += "<td>" + listaCreditos[i].tasa + "</td>";
+    contenido += "<td>" + listaCreditos[i].plazo + "</td>";
+    contenido += "<td>" + listaCreditos[i].cuota.toFixed(2) + "</td>";
+    contenido += "</tr>";
+  }
+  document.getElementById("tablaCreditos").innerHTML = contenido;
+}
 
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
