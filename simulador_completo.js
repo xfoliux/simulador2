@@ -21,6 +21,9 @@ function ocultarSecciones() {
 
   document.getElementById("historial")
     .classList.remove("activa");
+
+  document.getElementById("contacto")
+    .classList.remove("activa");
 }
 
 function mostrarSeccion(id) {
@@ -45,11 +48,12 @@ function guardarCliente() {
   let cedula = recuperaraTexto("cedula");
   let nombre = recuperaraTexto("nombre");
   let apellido = recuperaraTexto("apellido");
+  let email = recuperaraTexto("email");
   let ingresos = recuperarFloat("ingresos");
   let egresos = recuperarFloat("egresos");
 
   // VALIDACIÓN
-  if (cedula == "" || nombre == "" || apellido == "" || isNaN(ingresos) || isNaN(egresos)) {
+  if (cedula == "" || nombre == "" || apellido == "" || email == "" || isNaN(ingresos) || isNaN(egresos)) {
     alert("Complete todos los campos correctamente");
     return;
   }
@@ -65,6 +69,7 @@ function guardarCliente() {
       cedula,
       nombre,
       apellido,
+      email,
       ingresos,
       egresos
     };
@@ -74,6 +79,7 @@ function guardarCliente() {
     // ACTUALIZACION DE DATOS
     clienteSeleccionado.nombre = nombre;
     clienteSeleccionado.apellido = apellido;
+    clienteSeleccionado.email = email;
     clienteSeleccionado.ingresos = ingresos;
     clienteSeleccionado.egresos = egresos;
 
@@ -92,6 +98,7 @@ function pintarClientes() {
     contenido += "<td>" + clientes[i].cedula + "</td>";
     contenido += "<td>" + clientes[i].nombre + "</td>";
     contenido += "<td>" + clientes[i].apellido + "</td>";
+    contenido += "<td>" + clientes[i].email + "</td>";
     contenido += "<td>" + clientes[i].ingresos + "</td>";
     contenido += "<td>" + clientes[i].egresos + "</td>";
 
@@ -127,6 +134,7 @@ function seleccionarCliente(cedula) {
     mostrarTextoEnCaja("cedula", cliente.cedula);
     mostrarTextoEnCaja("nombre", cliente.nombre);
     mostrarTextoEnCaja("apellido", cliente.apellido);
+    mostrarTextoEnCaja("email", cliente.email);
     mostrarTextoEnCaja("ingresos", cliente.ingresos);
     mostrarTextoEnCaja("egresos", cliente.egresos);
 
@@ -140,6 +148,8 @@ function limpiarFormulario() {
   mostrarTextoEnCaja("cedula", "");
   mostrarTextoEnCaja("nombre", "");
   mostrarTextoEnCaja("apellido", "");
+  mostrarTextoEnCaja("email", "");
+
   mostrarTextoEnCaja("ingresos", "");
   mostrarTextoEnCaja("egresos", "");
 
@@ -173,6 +183,7 @@ function buscarClienteCredito(){
       <p><strong>Cédula:</strong> ${cliente.cedula}</p>
       <p><strong>Nombre:</strong> ${cliente.nombre}</p>
       <p><strong>Apellido:</strong> ${cliente.apellido}</p>
+      <p><strong>email:</strong> ${cliente.email}</p>
       <p><strong>Ingresos:</strong> ${cliente.ingresos}</p>
       <p><strong>Egresos:</strong> ${cliente.egresos}</p>`;
   } else {
@@ -233,7 +244,6 @@ function calcularCredito() {
   }
 }
 mostrarSeccion("parametros");
-
 
 function buscarCreditos(cedula) {
   let creditosCliente = [];
@@ -297,5 +307,13 @@ function pintarCreditos(listaCreditos) {
   }
   document.getElementById("tablaCreditos").innerHTML = contenido;
 }
+
+
+mostrarTextoEnCaja("montoCredito", "");
+mostrarTextoEnCaja("plazoCredito", "");
+
+document.getElementById("resultadoCredito").innerHTML = "";
+
+document.getElementById("btnAsignarCredito").disabled = true;
 
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
