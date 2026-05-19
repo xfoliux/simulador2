@@ -357,7 +357,7 @@ function buscarCreditosCliente() {
 function mostrarCreditosVIP() {
   let creditosVIP = [];
   for (let i = 0; i < creditos.length; i++) {
-    if (creditos[i].monto > 5000) {
+    if (creditos[i].monto >= 6000) {
       creditosVIP.push(creditos[i]);
     }
   }
